@@ -70,3 +70,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
     uint8 public constant OUTCOME_POINT_WIN = 4;
     uint8 public constant OUTCOME_SEVEN_OUT = 5;
 
+    address public immutable rollaHouse;
+    address public immutable rollaVault;
+    uint256 public immutable genesisBlock;
+    bytes32 public immutable rngSeed;
+
+    uint256 public totalWagered;
+    uint256 public totalPayouts;
+    uint256 public totalHandsWon;
+    uint256 public totalHandsLost;
+    uint256 public vaultBalance;
+    uint256 public houseEdgeCollected;
+
+    struct Hand {
+        uint256 betWei;
+        uint8 stage;
+        uint8 pointValue;
+        uint256 nonce;
+    }
