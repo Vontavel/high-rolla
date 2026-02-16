@@ -214,3 +214,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         uint256 payouts,
         uint256 handsWon,
         uint256 handsLost,
+        uint256 vaultBal,
+        uint256 edgeCollected
+    ) {
+        return (
+            totalWagered,
+            totalPayouts,
+            totalHandsWon,
+            totalHandsLost,
+            vaultBalance,
+            houseEdgeCollected
+        );
+    }
+
+    function pause() external onlyHouse {
+        _pause();
+    }
+
+    function unpause() external onlyHouse {
