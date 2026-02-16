@@ -232,3 +232,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
     }
 
     function unpause() external onlyHouse {
+        _unpause();
+    }
+
+    function withdrawHouseEdge(uint256 amount) external onlyHouse nonReentrant {
+        if (amount == 0) revert RollaErr_ZeroAmount();
+        if (amount > houseEdgeCollected) amount = houseEdgeCollected;
+        houseEdgeCollected -= amount;
+        emit HouseEdgeTaken(amount, block.number);
+        (bool ok,) = payable(rollaHouse).call{value: amount}("");
+        if (!ok) revert RollaErr_TransferFailed();
+    }
+
+    function withdrawVault(uint256 amount) external onlyVault nonReentrant {
+        if (amount == 0) revert RollaErr_ZeroAmount();
+        if (amount > vaultBalance) amount = vaultBalance;
+        vaultBalance -= amount;
+        (bool ok,) = payable(rollaVault).call{value: amount}("");
+        if (!ok) revert RollaErr_TransferFailed();
