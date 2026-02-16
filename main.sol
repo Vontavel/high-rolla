@@ -160,3 +160,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
             totalHandsLost += 1;
             h.stage = 0;
             h.betWei = 0;
+            emit ComeOutRolled(msg.sender, msg.value, d1, d2, sum, OUTCOME_CRAPS);
+            emit HandLost(msg.sender, msg.value, block.number);
+            return;
+        }
+        h.stage = 1;
+        h.pointValue = sum;
+        emit ComeOutRolled(msg.sender, msg.value, d1, d2, sum, OUTCOME_POINT_SET);
+        emit PointSet(msg.sender, sum, block.number);
+    }
+
+    function rollPoint() external whenNotPaused nonReentrant {
+        Hand storage h = _hands[msg.sender];
+        if (h.stage != 1) revert RollaErr_NotPointPhase();
+        uint256 betWei = h.betWei;
+        uint256 nonce = h.nonce + block.number;
+        (uint8 d1, uint8 d2, uint8 sum) = _rollTwoDice(nonce);
+        h.nonce = nonce;
+
