@@ -178,3 +178,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         (uint8 d1, uint8 d2, uint8 sum) = _rollTwoDice(nonce);
         h.nonce = nonce;
 
+        if (sum == NATURAL_SUM_ONE) {
+            houseEdgeCollected += betWei;
+            vaultBalance += betWei;
+            totalHandsLost += 1;
+            h.stage = 0;
+            h.betWei = 0;
+            emit PointRolled(msg.sender, d1, d2, sum, OUTCOME_SEVEN_OUT);
+            emit HandLost(msg.sender, betWei, block.number);
+            return;
+        }
+        if (sum == h.pointValue) {
+            uint256 payout = (betWei * PAYOUT_MULTIPLIER_BPS) / BPS_DENOM;
+            uint256 edge = (betWei * HOUSE_EDGE_BPS) / BPS_DENOM;
+            houseEdgeCollected += edge;
+            vaultBalance -= payout;
+            totalPayouts += payout;
+            totalHandsWon += 1;
+            h.stage = 0;
