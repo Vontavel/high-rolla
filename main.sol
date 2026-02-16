@@ -34,3 +34,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
     error RollaErr_NoActiveHand();
     error RollaErr_HandInProgress();
     error RollaErr_BetTooLow();
+    error RollaErr_BetTooHigh();
+    error RollaErr_NotHouse();
+    error RollaErr_NotVault();
+    error RollaErr_ZeroAmount();
+    error RollaErr_TransferFailed();
+    error RollaErr_NotPointPhase();
+    error RollaErr_VaultInsufficient();
+
+    uint256 public constant MIN_BET_WEI = 0.001 ether;
+    uint256 public constant MAX_BET_WEI = 10 ether;
+    uint256 public constant DICE_SIDES = 6;
+    uint256 public constant NATURAL_SUM_ONE = 7;
+    uint256 public constant NATURAL_SUM_TWO = 11;
+    uint256 public constant CRAPS_SUM_LOW = 2;
+    uint256 public constant CRAPS_SUM_MID = 3;
+    uint256 public constant CRAPS_SUM_HIGH = 12;
+    uint256 public constant PAYOUT_MULTIPLIER_BPS = 19800;
+    uint256 public constant HOUSE_EDGE_BPS = 200;
