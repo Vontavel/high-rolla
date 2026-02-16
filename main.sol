@@ -106,3 +106,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         genesisBlock = block.number;
         rngSeed = keccak256(abi.encodePacked(block.timestamp, block.prevrandao, block.chainid, "high_rolla"));
         totalWagered = 0;
+        totalPayouts = 0;
+        totalHandsWon = 0;
+        totalHandsLost = 0;
+        vaultBalance = 0;
+        houseEdgeCollected = 0;
+    }
+
+    function topVault() external payable whenNotPaused {
+        if (msg.value == 0) return;
+        vaultBalance += msg.value;
+        emit VaultTopped(msg.value, msg.sender, vaultBalance);
+    }
+
+    function _rollTwoDice(uint256 nonce) private view returns (uint8 d1, uint8 d2, uint8 sum) {
+        bytes32 h = keccak256(abi.encodePacked(rngSeed, block.prevrandao, block.timestamp, block.number, msg.sender, nonce));
+        d1 = uint8(uint256(h) % DICE_SIDES) + 1;
+        d2 = uint8(uint256(keccak256(abi.encodePacked(h, nonce))) % DICE_SIDES) + 1;
+        sum = d1 + d2;
