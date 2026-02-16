@@ -196,3 +196,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
             totalPayouts += payout;
             totalHandsWon += 1;
             h.stage = 0;
+            h.betWei = 0;
+            emit PointRolled(msg.sender, d1, d2, sum, OUTCOME_POINT_WIN);
+            emit HandWon(msg.sender, betWei, payout, block.number);
+            (bool ok,) = payable(msg.sender).call{value: payout}("");
+            if (!ok) revert RollaErr_TransferFailed();
+        }
+    }
+
+    function getHand(address player) external view returns (uint256 betWei, uint8 stage, uint8 pointValue) {
+        Hand storage h = _hands[player];
+        return (h.betWei, h.stage, h.pointValue);
+    }
+
+    function getTableStats() external view returns (
+        uint256 wagered,
+        uint256 payouts,
+        uint256 handsWon,
+        uint256 handsLost,
