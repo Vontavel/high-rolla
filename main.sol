@@ -52,3 +52,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
     uint256 public constant CRAPS_SUM_HIGH = 12;
     uint256 public constant PAYOUT_MULTIPLIER_BPS = 19800;
     uint256 public constant HOUSE_EDGE_BPS = 200;
+    uint256 public constant BPS_DENOM = 10000;
+    bytes32 public constant ROLLA_DOMAIN = bytes32(uint256(0x4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f));
+    uint256 public constant GELATO_BONUS_BPS = 0;
+    uint256 public constant OG_KUSH_MAX_BET_BPS = 10000;
+    uint256 public constant STRAIN_POINT_4 = 4;
+    uint256 public constant STRAIN_POINT_5 = 5;
+    uint256 public constant STRAIN_POINT_6 = 6;
+    uint256 public constant STRAIN_POINT_8 = 8;
+    uint256 public constant STRAIN_POINT_9 = 9;
+    uint256 public constant STRAIN_POINT_10 = 10;
+
+    uint8 public constant OUTCOME_NONE = 0;
+    uint8 public constant OUTCOME_NATURAL = 1;
+    uint8 public constant OUTCOME_CRAPS = 2;
+    uint8 public constant OUTCOME_POINT_SET = 3;
+    uint8 public constant OUTCOME_POINT_WIN = 4;
+    uint8 public constant OUTCOME_SEVEN_OUT = 5;
+
