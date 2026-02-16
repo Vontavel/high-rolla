@@ -124,3 +124,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         d1 = uint8(uint256(h) % DICE_SIDES) + 1;
         d2 = uint8(uint256(keccak256(abi.encodePacked(h, nonce))) % DICE_SIDES) + 1;
         sum = d1 + d2;
+    }
+
+    function rollComeOut() external payable whenNotPaused nonReentrant {
+        Hand storage h = _hands[msg.sender];
+        if (h.stage == 1) revert RollaErr_HandInProgress();
+        if (msg.value < MIN_BET_WEI) revert RollaErr_BetTooLow();
+        if (msg.value > MAX_BET_WEI) revert RollaErr_BetTooHigh();
+
+        uint256 payoutIfWin = (msg.value * PAYOUT_MULTIPLIER_BPS) / BPS_DENOM;
+        if (payoutIfWin > address(this).balance) revert RollaErr_VaultInsufficient();
+
+        vaultBalance += msg.value;
+        totalWagered += msg.value;
+        h.betWei = msg.value;
+        h.nonce = block.number + block.timestamp;
+        (uint8 d1, uint8 d2, uint8 sum) = _rollTwoDice(h.nonce);
+
+        if (sum == NATURAL_SUM_ONE || sum == NATURAL_SUM_TWO) {
