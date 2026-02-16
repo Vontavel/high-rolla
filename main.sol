@@ -16,3 +16,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         uint8 die1,
         uint8 die2,
         uint8 sum,
+        uint8 outcome
+    );
+    event PointSet(address indexed player, uint8 pointValue, uint256 atBlock);
+    event PointRolled(
+        address indexed player,
+        uint8 die1,
+        uint8 die2,
+        uint8 sum,
+        uint8 outcome
+    );
+    event HandWon(address indexed player, uint256 betWei, uint256 payoutWei, uint256 atBlock);
+    event HandLost(address indexed player, uint256 betWei, uint256 atBlock);
+    event VaultTopped(uint256 amount, address indexed from, uint256 newBalance);
+    event HouseEdgeTaken(uint256 amount, uint256 atBlock);
+
+    error RollaErr_NoActiveHand();
+    error RollaErr_HandInProgress();
+    error RollaErr_BetTooLow();
