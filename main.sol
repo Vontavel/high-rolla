@@ -250,3 +250,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         vaultBalance -= amount;
         (bool ok,) = payable(rollaVault).call{value: amount}("");
         if (!ok) revert RollaErr_TransferFailed();
+    }
+
+    function simulateDice(uint256 nonce) external view returns (uint8 d1, uint8 d2, uint8 sum) {
+        return _rollTwoDice(nonce);
+    }
+
+    function isNatural(uint8 sum) public pure returns (bool) {
+        return sum == NATURAL_SUM_ONE || sum == NATURAL_SUM_TWO;
+    }
+
+    function isCraps(uint8 sum) public pure returns (bool) {
+        return sum == CRAPS_SUM_LOW || sum == CRAPS_SUM_MID || sum == CRAPS_SUM_HIGH;
+    }
+
+    function isPointNumber(uint8 sum) public pure returns (bool) {
+        return sum >= 4 && sum <= 10 && sum != 7;
+    }
+
