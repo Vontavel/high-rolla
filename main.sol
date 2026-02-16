@@ -88,3 +88,21 @@ contract HighRolla is ReentrancyGuard, Pausable {
         uint8 pointValue;
         uint256 nonce;
     }
+    mapping(address => Hand) private _hands;
+
+    modifier onlyHouse() {
+        if (msg.sender != rollaHouse) revert RollaErr_NotHouse();
+        _;
+    }
+
+    modifier onlyVault() {
+        if (msg.sender != rollaVault) revert RollaErr_NotVault();
+        _;
+    }
+
+    constructor() {
+        rollaHouse = address(0xF2a8E5b1C9d4e7A0c3B6f9D2e5a8C1b4F7d0E3);
+        rollaVault = address(0x6D1c9E4a7F0b3B8e2A5d6C9f1E4a7b0D3c8F2);
+        genesisBlock = block.number;
+        rngSeed = keccak256(abi.encodePacked(block.timestamp, block.prevrandao, block.chainid, "high_rolla"));
+        totalWagered = 0;
